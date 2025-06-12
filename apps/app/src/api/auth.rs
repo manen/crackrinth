@@ -8,12 +8,21 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
     tauri::plugin::Builder::<R>::new("auth")
         .invoke_handler(tauri::generate_handler![
             login,
+            login_offline,
             remove_user,
             get_default_user,
             set_default_user,
             get_users,
         ])
         .build()
+}
+
+#[tauri::command]
+pub async fn login_offline<R: Runtime>(
+    app: tauri::AppHandle<R>,
+) -> Result<Option<String>> {
+    println!("login_offline called");
+    Ok(Some("hello bello".into()))
 }
 
 /// Authenticate a user with Hydra - part 1

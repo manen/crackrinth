@@ -37,11 +37,16 @@
           <TrashIcon />
         </Button>
       </div>
-      <div v-else class="logged-out account">
-        <h4>Not signed in</h4>
-        <Button v-tooltip="'Log in'" icon-only color="primary" @click="login()">
-          <LogInIcon />
-        </Button>
+      <div>
+        <div class="logged-out account">
+          <h4>Online login</h4>
+          <Button v-tooltip="'Log in'" icon-only color="primary" @click="login()">
+            <LogInIcon />
+          </Button>
+        </div>
+          <Button class="offline-login mt-4 r-btn m-2" @click="login_offline()">
+            Offline login
+          </Button>
       </div>
       <div v-if="displayAccounts.length > 0" class="account-group">
         <div v-for="account in displayAccounts" :key="account.id" class="account-row">
@@ -71,6 +76,7 @@ import {
   remove_user,
   set_default_user,
   login as login_flow,
+  login_offline as login_flow_offline,
   get_default_user,
 } from '@/helpers/auth'
 import { handleError } from '@/store/state.js'
@@ -123,6 +129,17 @@ async function login() {
   }
 
   trackEvent('AccountLogIn')
+}
+
+async function login_offline() {
+  const loggedIn = await login_flow_offline().catch(handleSevereError);
+
+  if (loggedIn) {
+    await setAccount(loggedIn)
+    await refreshValues()
+  }
+
+  trackEvent('OfflineLogIn')
 }
 
 const logout = async (id) => {

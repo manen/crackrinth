@@ -25,6 +25,10 @@ export async function login() {
   return await invoke('plugin:auth|login')
 }
 
+export async function login_offline() {
+  return await invoke('plugin:auth|login_offline')
+}
+
 /**
  * Retrieves the default user
  * @return {Promise<UUID | undefined>}
